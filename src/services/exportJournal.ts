@@ -75,7 +75,34 @@ const exportLayoutStyles = `
   }
 `;
 
-function createExportTarget(element: HTMLElement): HTMLElement {
+async function rasterizeCoverImage(source: HTMLImageElement): Promise<string | null> {
+  if (!source.currentSrc && !source.src) return null;
+
+  try {
+    const response = await fetch(source.currentSrc || source.src);
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const image = new Image();
+    image.src = objectUrl;
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error('Cover image could not be loaded.'));
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = EXPORT_WIDTH / 2;
+    canvas.height = EXPORT_HEIGHT;
+    canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(objectUrl);
+    return canvas.toDataURL('image/png');
+  } catch (error) {
+    console.warn('Could not rasterize composition cover for export:', error);
+    return null;
+  }
+}
+
+async function createExportTarget(element: HTMLElement): Promise<HTMLElement> {
   const target = element.cloneNode(true) as HTMLElement;
   target.classList.add('journal-export-mode');
   Object.assign(target.style, {
@@ -117,6 +144,12 @@ function createExportTarget(element: HTMLElement): HTMLElement {
 
   const coverImage = target.querySelector('.spread-cover-image') as HTMLImageElement | null;
   if (coverImage) {
+    const sourceCover = element.querySelector('.spread-cover-image') as HTMLImageElement | null;
+    const rasterizedCover = sourceCover ? await rasterizeCoverImage(sourceCover) : null;
+    if (rasterizedCover) {
+      coverImage.src = rasterizedCover;
+      coverImage.removeAttribute('crossorigin');
+    }
     coverImage.style.width = `${EXPORT_WIDTH / 2}px`;
     coverImage.style.height = `${EXPORT_HEIGHT}px`;
     coverImage.style.position = 'absolute';
@@ -163,7 +196,7 @@ export async function renderJournalToPng(
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '') || 'song';
   const filename = `pataphor-journal-${cleanTitle}.png`;
-  const exportTarget = createExportTarget(element);
+  const exportTarget = await createExportTarget(element);
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
