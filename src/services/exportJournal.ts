@@ -15,18 +15,19 @@ const exportLayoutStyles = `
     height: ${EXPORT_HEIGHT}px !important;
     max-width: none !important;
     min-width: ${EXPORT_WIDTH}px !important;
-    display: flex !important;
-    flex-direction: row !important;
+    display: block !important;
     aspect-ratio: 4 / 3 !important;
     overflow: hidden !important;
     border-radius: 0 !important;
   }
   #journal-export-target.journal-export-mode .spread-page {
-    width: 50% !important;
-    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    width: ${EXPORT_WIDTH / 2}px !important;
+    height: ${EXPORT_HEIGHT}px !important;
     min-height: ${EXPORT_HEIGHT}px !important;
     min-width: 0 !important;
-    flex: 0 0 50% !important;
+    flex: none !important;
     aspect-ratio: auto !important;
     overflow: hidden !important;
   }
@@ -35,14 +36,18 @@ const exportLayoutStyles = `
     inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
     max-width: none !important;
     object-fit: fill !important;
     display: block !important;
   }
   #journal-export-target.journal-export-mode .spread-page-left {
+    left: 0 !important;
     order: 1 !important;
   }
   #journal-export-target.journal-export-mode .spread-page-right {
+    left: ${EXPORT_WIDTH / 2}px !important;
     order: 2 !important;
     container-type: size !important;
   }
@@ -82,8 +87,7 @@ function createExportTarget(element: HTMLElement): HTMLElement {
     maxWidth: 'none',
     minWidth: `${EXPORT_WIDTH}px`,
     aspectRatio: '4 / 3',
-    display: 'flex',
-    flexDirection: 'row',
+    display: 'block',
     overflow: 'hidden'
   });
 
@@ -96,18 +100,25 @@ function createExportTarget(element: HTMLElement): HTMLElement {
   }
 
   target.querySelectorAll<HTMLElement>('.spread-page').forEach(page => {
-    page.style.width = '50%';
+    page.style.position = 'absolute';
+    page.style.top = '0';
+    page.style.width = `${EXPORT_WIDTH / 2}px`;
     page.style.height = '100%';
     page.style.minHeight = `${EXPORT_HEIGHT}px`;
     page.style.minWidth = '0';
-    page.style.flex = '0 0 50%';
+    page.style.flex = 'none';
     page.style.overflow = 'hidden';
   });
 
+  const leftPage = target.querySelector('.spread-page-left') as HTMLElement | null;
+  const rightPage = target.querySelector('.spread-page-right') as HTMLElement | null;
+  if (leftPage) leftPage.style.left = '0';
+  if (rightPage) rightPage.style.left = `${EXPORT_WIDTH / 2}px`;
+
   const coverImage = target.querySelector('.spread-cover-image') as HTMLImageElement | null;
   if (coverImage) {
-    coverImage.style.width = '100%';
-    coverImage.style.height = '100%';
+    coverImage.style.width = `${EXPORT_WIDTH / 2}px`;
+    coverImage.style.height = `${EXPORT_HEIGHT}px`;
     coverImage.style.position = 'absolute';
     coverImage.style.inset = '0';
     coverImage.style.maxWidth = 'none';
