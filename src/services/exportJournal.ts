@@ -89,7 +89,16 @@ function createExportTarget(element: HTMLElement): HTMLElement {
     page.style.height = '100%';
     page.style.minHeight = `${EXPORT_HEIGHT}px`;
     page.style.flex = '0 0 50%';
+    page.style.overflow = 'hidden';
   });
+
+  const coverImage = target.querySelector('.spread-cover-image') as HTMLImageElement | null;
+  if (coverImage) {
+    coverImage.style.width = '100%';
+    coverImage.style.height = '100%';
+    coverImage.style.objectFit = 'fill';
+    coverImage.style.display = 'block';
+  }
 
   const sourceCanvas = element.querySelector('.paper-ink-canvas') as HTMLCanvasElement | null;
   const targetCanvas = target.querySelector('.paper-ink-canvas') as HTMLCanvasElement | null;
