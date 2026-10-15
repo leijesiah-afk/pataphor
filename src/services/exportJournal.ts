@@ -25,8 +25,19 @@ const exportLayoutStyles = `
     width: 50% !important;
     height: 100% !important;
     min-height: ${EXPORT_HEIGHT}px !important;
+    min-width: 0 !important;
     flex: 0 0 50% !important;
     aspect-ratio: auto !important;
+    overflow: hidden !important;
+  }
+  #journal-export-target.journal-export-mode .spread-cover-image {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: fill !important;
+    display: block !important;
   }
   #journal-export-target.journal-export-mode .spread-page-left {
     order: 1 !important;
@@ -88,6 +99,7 @@ function createExportTarget(element: HTMLElement): HTMLElement {
     page.style.width = '50%';
     page.style.height = '100%';
     page.style.minHeight = `${EXPORT_HEIGHT}px`;
+    page.style.minWidth = '0';
     page.style.flex = '0 0 50%';
     page.style.overflow = 'hidden';
   });
@@ -96,6 +108,9 @@ function createExportTarget(element: HTMLElement): HTMLElement {
   if (coverImage) {
     coverImage.style.width = '100%';
     coverImage.style.height = '100%';
+    coverImage.style.position = 'absolute';
+    coverImage.style.inset = '0';
+    coverImage.style.maxWidth = 'none';
     coverImage.style.objectFit = 'fill';
     coverImage.style.display = 'block';
   }
