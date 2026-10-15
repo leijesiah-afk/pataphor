@@ -89,42 +89,41 @@ const exportLayoutStyles = `
     left: 20% !important;
     width: 60% !important;
     transform: rotate(-3deg) !important;
-    box-shadow: 10px 12px 0 rgba(53, 30, 40, .24) !important;
+    box-shadow: 14px 16px 0 rgba(53, 30, 40, .45) !important;
   }
   #journal-export-target.journal-export-mode .spread-fabric-title-strip,
   #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
-    display: table !important;
+    display: inline-block !important;
     box-sizing: border-box !important;
     z-index: 5 !important;
     width: auto !important;
-    max-width: 82% !important;
-    height: auto !important;
-    padding: 8px 16px !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    padding: 6px 10px !important;
     color: #241b1b !important;
     background: #faf8f5 !important;
     border: 1px solid rgba(36, 27, 27, .72) !important;
+    box-shadow: 5px 6px 0 rgba(53, 30, 40, .28) !important;
     font-family: Georgia, "Times New Roman", serif !important;
     font-weight: 400 !important;
     line-height: 1.08 !important;
-    overflow: visible !important;
-    overflow-wrap: normal !important;
+    overflow: hidden !important;
+    overflow-wrap: break-word !important;
     word-break: normal !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
     transform-origin: left center !important;
   }
   #journal-export-target.journal-export-mode .spread-fabric-title-strip {
-    top: 74% !important;
+    top: 80% !important;
     left: 8% !important;
     transform: rotate(-7deg) !important;
-    font-size: 26px !important;
-    min-height: 48px !important;
+    font-size: 17px !important;
   }
   #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
-    top: 84% !important;
-    left: 18% !important;
+    top: 89% !important;
+    left: 19% !important;
     transform: rotate(5deg) !important;
-    font-size: 20px !important;
-    min-height: 40px !important;
+    font-size: 14px !important;
   }
   #journal-export-target.journal-export-mode .spread-artwork-box {
     width: 100% !important;
