@@ -1030,6 +1030,34 @@ body{background-color:var(--color-bg-pure);color:var(--color-text-dark)}
 }
 @media (max-width:1100px){.journal-main-layout{gap:24px}.spread-capture-outer{max-width:780px}}
 
+@media (min-width:769px) and (max-width:1100px){
+  .journal-main-layout{
+    flex-direction:column;
+    align-items:center;
+  }
+  .spread-capture-outer{
+    width:100%;
+    max-width:960px;
+  }
+  .journal-notebook-spread{
+    width:100%;
+  }
+  .journal-sidebar-actions{
+    width:100%;
+    max-width:960px;
+    flex-direction:row;
+    flex-wrap:wrap;
+  }
+  .download-btn-card{
+    flex:1;
+    min-width:240px;
+  }
+  .journal-options-card{
+    flex:1.5;
+    min-width:300px;
+  }
+}
+
 /* A small record-deck keeps the soundtrack close to the writing surface. */
 .journal-listen-deck{
   width:min(100%,860px);
