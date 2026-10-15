@@ -93,20 +93,24 @@ const exportLayoutStyles = `
   }
   #journal-export-target.journal-export-mode .spread-fabric-title-strip,
   #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
-    display: inline-block !important;
+    display: flex !important;
+    align-items: center !important;
     box-sizing: border-box !important;
     z-index: 5 !important;
     width: auto !important;
-    max-width: none !important;
-    min-height: 0 !important;
-    padding: 6px 10px !important;
+    max-width: 300px !important;
+    min-height: 36px !important;
+    height: 38px !important;
+    padding: 0 14px !important;
     color: #241b1b !important;
     background: #faf8f5 !important;
     border: 1px solid rgba(36, 27, 27, .72) !important;
     box-shadow: 5px 6px 0 rgba(53, 30, 40, .28) !important;
     font-family: Georgia, "Times New Roman", serif !important;
     font-weight: 400 !important;
-    line-height: 1.08 !important;
+    line-height: 1.1 !important;
+    letter-spacing: .01em !important;
+    text-align: left !important;
     overflow: hidden !important;
     overflow-wrap: break-word !important;
     word-break: normal !important;
@@ -114,16 +118,20 @@ const exportLayoutStyles = `
     transform-origin: left center !important;
   }
   #journal-export-target.journal-export-mode .spread-fabric-title-strip {
-    top: 80% !important;
+    top: 78% !important;
     left: 8% !important;
-    transform: rotate(-7deg) !important;
-    font-size: 17px !important;
+    transform: rotate(-3deg) !important;
+    font-size: 18px !important;
   }
   #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
-    top: 89% !important;
+    top: 86% !important;
     left: 19% !important;
-    transform: rotate(5deg) !important;
-    font-size: 14px !important;
+    width: auto !important;
+    max-width: 250px !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    transform: rotate(2deg) !important;
+    font-size: 15px !important;
   }
   #journal-export-target.journal-export-mode .spread-artwork-box {
     width: 100% !important;
@@ -221,6 +229,23 @@ async function createExportTarget(element: HTMLElement): Promise<HTMLElement> {
     exportText.style.position = 'absolute';
   }
 
+  const sizeLabel = (
+    label: HTMLElement | null,
+    minimum: number,
+    maximum: number,
+    characterWidth: number
+  ) => {
+    if (!label) return;
+    const width = Math.min(
+      maximum,
+      Math.max(minimum, Math.ceil(label.textContent?.trim().length ?? 0) * characterWidth + 28)
+    );
+    label.style.width = `${width}px`;
+    label.style.maxWidth = `${width}px`;
+  };
+  sizeLabel(target.querySelector('.spread-fabric-title-strip'), 120, 300, 10.5);
+  sizeLabel(target.querySelector('.spread-fabric-artist-strip'), 120, 250, 8.5);
+
   target.querySelectorAll<HTMLElement>('.spread-page').forEach(page => {
     page.style.position = 'absolute';
     page.style.top = '0';
@@ -252,14 +277,6 @@ async function createExportTarget(element: HTMLElement): Promise<HTMLElement> {
     coverImage.style.maxWidth = 'none';
     coverImage.style.objectFit = 'fill';
     coverImage.style.display = 'block';
-  }
-
-  const sourceCanvas = element.querySelector('.paper-ink-canvas') as HTMLCanvasElement | null;
-  const targetCanvas = target.querySelector('.paper-ink-canvas') as HTMLCanvasElement | null;
-  if (sourceCanvas && targetCanvas) {
-    targetCanvas.width = sourceCanvas.width;
-    targetCanvas.height = sourceCanvas.height;
-    targetCanvas.getContext('2d')?.drawImage(sourceCanvas, 0, 0);
   }
 
   const style = document.createElement('style');

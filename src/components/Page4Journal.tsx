@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Song } from '../types';
 import { PataphorLogo } from './Logo';
 import { renderJournalToPng, downloadDataUrl } from '../services/exportJournal';
-import { Download, Loader2, Check, Type, Eye, X, Pen, Eraser } from 'lucide-react';
+import { Download, Loader2, Check, Type, Eye, X } from 'lucide-react';
 import { AudioPlayer } from './AudioPlayer';
 import { motion } from 'motion/react';
 import orangeFabricCover from '../../imgs/orange-fabric-cover.svg';
@@ -11,8 +11,6 @@ interface Page4JournalProps {
   song: Song;
   journalEntry: string;
   onEntryChange: (text: string) => void;
-  journalInk: string;
-  onInkChange: (ink: string) => void;
   journalDate: string;
   onDateChange: (date: string) => void;
   onBackToCover: () => void;
@@ -22,8 +20,6 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
   song,
   journalEntry,
   onEntryChange,
-  journalInk,
-  onInkChange,
   journalDate,
   onDateChange
 }) => {
@@ -31,91 +27,13 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [fontChoice, setFontChoice] = useState<'caveat' | 'homemade-apple' | 'playpen' | 'times-new-roman' | 'helvetica'>('caveat');
   const [useLongDate, setUseLongDate] = useState(false);
-  const [isDrawingMode, setIsDrawingMode] = useState(Boolean(journalInk));
   const [exportedImage, setExportedImage] = useState<{ url: string; filename: string } | null>(null);
 
   // Reference to the journal spread element for PNG capture
   const journalSpreadRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const inkCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const isDrawingRef = useRef(false);
-  const canvasInitializedRef = useRef(false);
 
   const artworkSrc = song.artworkDataUrl || song.artworkUrl600 || song.artworkUrl100;
-
-  useEffect(() => {
-    const canvas = inkCanvasRef.current;
-    if (!canvas) return;
-
-    const resizeCanvas = () => {
-      const rect = canvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      const previousInk = canvasInitializedRef.current ? canvas.toDataURL() : journalInk;
-      const ratio = window.devicePixelRatio || 1;
-      canvas.width = Math.round(rect.width * ratio);
-      canvas.height = Math.round(rect.height * ratio);
-      canvasInitializedRef.current = true;
-      const context = canvas.getContext('2d');
-      if (!context) return;
-      context.scale(ratio, ratio);
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
-      context.strokeStyle = '#351e28';
-      context.lineWidth = 2.2;
-      if (previousInk) {
-        const image = new Image();
-        image.onload = () => context.drawImage(image, 0, 0, rect.width, rect.height);
-        image.src = previousInk;
-      }
-    };
-
-    resizeCanvas();
-    const observer = new ResizeObserver(resizeCanvas);
-    observer.observe(canvas);
-    return () => observer.disconnect();
-  }, [journalInk]);
-
-  const getCanvasPoint = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    const canvas = inkCanvasRef.current;
-    if (!canvas) return null;
-    const rect = canvas.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-  };
-
-  const handleInkStart = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    const point = getCanvasPoint(event);
-    const canvas = inkCanvasRef.current;
-    if (!point || !canvas) return;
-    canvas.setPointerCapture(event.pointerId);
-    const context = canvas.getContext('2d');
-    if (!context) return;
-    isDrawingRef.current = true;
-    context.beginPath();
-    context.moveTo(point.x, point.y);
-  };
-
-  const handleInkMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!isDrawingRef.current) return;
-    const point = getCanvasPoint(event);
-    const context = inkCanvasRef.current?.getContext('2d');
-    if (!point || !context) return;
-    context.lineTo(point.x, point.y);
-    context.stroke();
-  };
-
-  const handleInkEnd = () => {
-    if (!isDrawingRef.current || !inkCanvasRef.current) return;
-    isDrawingRef.current = false;
-    onInkChange(inkCanvasRef.current.toDataURL('image/png'));
-  };
-
-  const clearInk = () => {
-    const canvas = inkCanvasRef.current;
-    const context = canvas?.getContext('2d');
-    if (!canvas || !context) return;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    onInkChange('');
-  };
 
   // Auto-resize textarea
   useEffect(() => {
@@ -203,7 +121,7 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
             className="journal-notebook-spread"
             id="journal-export-target"
           >
-            {/* LEFT HALF: Composition Book Cover (matching Mockup 4 left side) */}
+            {/* LEFT HALF: Orange fabric cover */}
             <div className="spread-page spread-page-left">
               <img
                 src={orangeFabricCover}
@@ -257,29 +175,17 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
                     className="paper-handwriting-input"
                     style={{
                       fontFamily: getFontFamily(),
-                      display: isDrawingMode ? 'none' : 'block'
+                      display: 'block'
                     }}
                     value={journalEntry}
                     onChange={(e) => onEntryChange(e.target.value)}
                     aria-label="Journal entry text"
                     spellCheck={false}
                   />
-                  <canvas
-                    ref={inkCanvasRef}
-                    className={`paper-ink-canvas ${isDrawingMode ? 'active' : ''}`}
-                    onPointerDown={handleInkStart}
-                    onPointerMove={handleInkMove}
-                    onPointerUp={handleInkEnd}
-                    onPointerCancel={handleInkEnd}
-                    aria-label="Freehand journal drawing"
-                  />
-
-                  {/* Clean export layer rendered during canvas snapshot */}
                   <div
                     className="paper-handwriting-export-layer"
                     style={{
-                      fontFamily: getFontFamily(),
-                      opacity: isDrawingMode ? '0' : undefined
+                      fontFamily: getFontFamily()
                     }}
                     aria-hidden="true"
                   >
@@ -339,34 +245,6 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
 
           {/* Writing Tools / Options Card */}
           <div className="journal-options-card">
-            <div className="options-section writing-mode-section">
-              <span className="options-title">Writing Mode</span>
-              <div className="font-choice-group">
-                <button
-                  type="button"
-                  className={`btn-pill-choice ${!isDrawingMode ? 'active' : ''}`}
-                  onClick={() => setIsDrawingMode(false)}
-                >
-                  <Type size={13} /> Type
-                </button>
-                <button
-                  type="button"
-                  className={`btn-pill-choice ${isDrawingMode ? 'active' : ''}`}
-                  onClick={() => setIsDrawingMode(true)}
-                >
-                  <Pen size={13} /> Pen
-                </button>
-                <button
-                  type="button"
-                  className="btn-pill-choice"
-                  onClick={clearInk}
-                  disabled={!journalInk}
-                  title="Clear pen marks"
-                >
-                  <Eraser size={13} /> Clear
-                </button>
-              </div>
-            </div>
             <div className="options-section">
               <span className="options-title">
                 <Type size={14} style={{ verticalAlign: '-2px', marginRight: '5px' }} />

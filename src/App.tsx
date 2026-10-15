@@ -21,7 +21,6 @@ export function App() {
   const [currentStep, setCurrentStep] = useState<PageStep>('landing');
   const [selectedSong, setSelectedSong] = useState<Song | null>(FEATURED_SAMPLE_SONGS[0]);
   const [journalEntry, setJournalEntry] = useState<string>('');
-  const [journalInk, setJournalInk] = useState<string>('');
   const [journalDate, setJournalDate] = useState<string>(getDefaultDate());
 
   // Load saved state from localStorage on initial mount
@@ -32,7 +31,6 @@ export function App() {
         const parsed = JSON.parse(saved);
         if (parsed.selectedSong) setSelectedSong(parsed.selectedSong);
         if (typeof parsed.journalEntry === 'string') setJournalEntry(parsed.journalEntry);
-        if (typeof parsed.journalInk === 'string') setJournalInk(parsed.journalInk);
         if (parsed.journalDate) setJournalDate(parsed.journalDate);
         if (parsed.currentStep) setCurrentStep(parsed.currentStep);
       }
@@ -49,7 +47,6 @@ export function App() {
         JSON.stringify({
           selectedSong,
           journalEntry,
-          journalInk,
           journalDate,
           currentStep
         })
@@ -57,7 +54,7 @@ export function App() {
     } catch (e) {
       console.warn('Could not write to localStorage:', e);
     }
-  }, [selectedSong, journalEntry, journalInk, journalDate, currentStep]);
+  }, [selectedSong, journalEntry, journalDate, currentStep]);
 
   const handleSelectSong = (song: Song) => {
     setSelectedSong(song);
@@ -104,8 +101,6 @@ export function App() {
             song={selectedSong}
             journalEntry={journalEntry}
             onEntryChange={setJournalEntry}
-            journalInk={journalInk}
-            onInkChange={setJournalInk}
             journalDate={journalDate}
             onDateChange={setJournalDate}
             onBackToCover={() => setCurrentStep('cover')}

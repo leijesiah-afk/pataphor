@@ -824,30 +824,6 @@ body{background-color:var(--color-bg-pure);color:var(--color-text-dark)}
 .paper-handwriting-export-layer{
   text-align:left;
 }
-.paper-ink-canvas{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  width:100%;
-  height:100%;
-  display:block;
-  touch-action:none;
-  cursor:crosshair;
-  pointer-events:none;
-}
-.paper-ink-canvas.active{
-  pointer-events:auto;
-}
-.writing-mode-section .btn-pill-choice{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-}
-.writing-mode-section .btn-pill-choice:disabled{
-  opacity:.4;
-  cursor:not-allowed;
-}
 /* Shared quiet-paper language for the working pages. */
 .site-header{
   background:rgba(252,248,242,.94);

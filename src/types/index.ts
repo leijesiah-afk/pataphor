@@ -14,7 +14,6 @@ export type PageStep = 'landing' | 'search' | 'cover' | 'journal';
 export interface JournalState {
   selectedSong: Song | null;
   journalEntry: string;
-  journalInk?: string;
   journalDate: string; // Formatted date string, e.g. "10/08/2026" or "October 8, 2026"
   fontStyle?: 'caveat' | 'homemade-apple' | 'playpen' | 'times-new-roman' | 'helvetica';
 }
