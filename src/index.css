@@ -72,9 +72,13 @@
 .export-only-field-note{display:none}
 .journal-export-mode{background:#f7f1e8;box-shadow:0 28px 70px rgba(40,20,5,.18)}
 .journal-export-mode:after{content:"";position:absolute;inset:14px;border:1px solid rgba(226,86,11,.22);border-radius:2px;pointer-events:none;z-index:20}
+.journal-export-mode:before{content:"PATAPHOR / FIELD NOTE 001";position:absolute;top:28px;left:34px;z-index:21;color:rgba(137,49,1,.62);font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:.22em;line-height:1;text-transform:uppercase}
 .journal-export-mode .export-only-field-note{display:flex;position:absolute;right:7%;bottom:5.5%;z-index:8;flex-direction:column;align-items:flex-end;gap:2px;color:rgba(93,52,31,.62);font-family:var(--font-sans);font-size:clamp(.42rem,.58vw,.62rem);font-weight:600;letter-spacing:.16em;line-height:1.3;text-transform:uppercase}
 .journal-export-mode .export-only-field-note span:last-child{font-size:.72em;letter-spacing:.1em;opacity:.75}
-.journal-export-mode .spread-cover-overlay{border-color:rgba(25,18,12,.8);box-shadow:0 5px 16px rgba(0,0,0,.22)}
+.journal-export-mode .spread-cover-overlay{border-color:rgba(25,18,12,.8);box-shadow:6px 6px 0 rgba(25,18,12,.16)}
+.journal-export-mode .spread-cover-meta{gap:7px}
+.journal-export-mode .spread-song-title{font-family:var(--font-editorial);font-weight:600}
+.journal-export-mode .spread-song-artist{color:rgba(53,30,40,.82)}
 .journal-export-mode .paper-date-text{color:#6f3a21;font-weight:600}
 
 /* Pataphor's impact palette: warm paper, bright orange, and burnt umber contrast. */
@@ -1162,7 +1166,7 @@ body{background-color:var(--color-bg-pure);color:var(--color-text-dark)}
 
 @media (max-width:768px){
   .cover-page-container{padding-left:12px;padding-right:12px}
-  .composition-book-wrapper{width:min(100%,410px)}
+  .composition-book-wrapper{width:min(410px,calc(100vw - 24px));max-width:100%}
   .composition-book-cover{width:100%}
   .composition-label-overlay{
     left:8%;
@@ -1190,4 +1194,232 @@ body{background-color:var(--color-bg-pure);color:var(--color-text-dark)}
   }
   .composition-song-title{font-size:clamp(.72rem,3.8vw,1.15rem)}
   .composition-song-artist{font-size:clamp(.62rem,3.1vw,.95rem)}
+}
+
+/* The cover card is intentionally independent from the artwork's printed label. */
+.composition-label-overlay{
+  top:20%;
+  left:6%;
+  width:88%;
+  height:30%;
+  display:grid;
+  grid-template-columns:minmax(0,24%) minmax(0,1fr);
+  align-items:center;
+  gap:6%;
+  padding:4% 5%;
+  background:#faf8f5;
+  border:1px solid rgba(34,34,34,.9);
+  box-shadow:4px 4px 0 rgba(34,34,34,.18);
+  overflow:visible;
+  text-align:left;
+  z-index:4;
+}
+.composition-cover-cleanup{
+  display:none;
+}
+.composition-artwork-box{
+  width:100%;
+  height:auto;
+  aspect-ratio:1;
+  border-radius:3px;
+  box-shadow:0 2px 8px rgba(34,34,34,.2);
+}
+.composition-text-details{
+  display:flex;
+  min-width:0;
+  min-height:0;
+  align-self:center;
+  justify-content:center;
+  gap:clamp(2px,.45vw,6px);
+  overflow:visible;
+}
+.composition-label-kicker{
+  color:#1a1a1a;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(.52rem,.8vw,.8rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  line-height:1;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.composition-song-title,
+.composition-song-artist{
+  display:block;
+  max-width:100%;
+  overflow:visible;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  -webkit-line-clamp:unset;
+  line-clamp:unset;
+}
+.composition-song-title{
+  font-size:clamp(.82rem,1.35vw,1.3rem);
+  line-height:1.05;
+  font-weight:600;
+}
+.composition-song-artist{
+  font-size:clamp(.68rem,1.05vw,1rem);
+  line-height:1.12;
+}
+
+@media (max-width:768px){
+  .composition-label-overlay{
+    top:20%;
+    left:5%;
+    width:90%;
+    height:30%;
+    grid-template-columns:minmax(0,22%) minmax(0,1fr);
+    gap:5%;
+    padding:4% 5%;
+  }
+  .composition-label-kicker{font-size:clamp(.46rem,2.4vw,.72rem)}
+  .composition-song-title{font-size:clamp(.76rem,3.6vw,1.08rem)}
+  .composition-song-artist{font-size:clamp(.64rem,3vw,.9rem)}
+}
+
+/* Orange fabric cover: quiet logo strip, angled image, and cut-paper title labels. */
+.composition-book-cover{
+  overflow:hidden;
+  background:#e8692e;
+}
+.fabric-cover-logo-strip{
+  position:absolute;
+  top:8%;
+  left:0;
+  width:100%;
+  height:10%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#faf8f5;
+  border:1px solid rgba(36,27,27,.72);
+  z-index:3;
+}
+.fabric-cover-logo-strip svg{
+  width:58%;
+  max-height:100%;
+  object-fit:contain;
+  height:auto;
+}
+.fabric-cover-artwork{
+  position:absolute;
+  top:24%;
+  left:20%;
+  width:60%;
+  aspect-ratio:1;
+  z-index:2;
+  transform:rotate(-3deg);
+  box-shadow:14px 16px 0 rgba(53,30,40,.24);
+}
+.fabric-cover-art{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.fabric-cover-title-strip,
+.fabric-cover-artist-strip{
+  position:absolute;
+  z-index:4;
+  left:8%;
+  max-width:88%;
+  padding:2.2% 4%;
+  color:#241b1b;
+  background:#faf8f5;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(.78rem,1.45vw,1.45rem);
+  line-height:1.05;
+  letter-spacing:.03em;
+  overflow-wrap:anywhere;
+  box-shadow:5px 6px 0 rgba(53,30,40,.16);
+}
+.fabric-cover-title-strip{
+  top:80%;
+  transform:rotate(-7deg);
+}
+.fabric-cover-artist-strip{
+  top:89%;
+  left:19%;
+  font-size:clamp(.7rem,1.2vw,1.2rem);
+  transform:rotate(5deg);
+}
+
+.spread-page-left{
+  background:#e8692e;
+}
+.spread-fabric-logo-strip{
+  position:absolute;
+  top:8%;
+  left:0;
+  width:100%;
+  height:10%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#faf8f5;
+  border:1px solid rgba(36,27,27,.72);
+  z-index:4;
+}
+.spread-fabric-logo-strip svg{
+  width:58%;
+  max-height:100%;
+  object-fit:contain;
+  height:auto;
+}
+.spread-fabric-artwork{
+  position:absolute;
+  top:24%;
+  left:20%;
+  width:60%;
+  aspect-ratio:1;
+  z-index:3;
+  transform:rotate(-3deg);
+  box-shadow:10px 12px 0 rgba(53,30,40,.24);
+}
+.spread-fabric-art{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.spread-fabric-title-strip,
+.spread-fabric-artist-strip{
+  position:absolute;
+  z-index:5;
+  left:8%;
+  max-width:88%;
+  padding:2.2% 4%;
+  color:#241b1b;
+  background:#faf8f5;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(.7rem,1.5vw,1.4rem);
+  line-height:1.05;
+  letter-spacing:.02em;
+  overflow-wrap:anywhere;
+  box-shadow:4px 5px 0 rgba(53,30,40,.16);
+}
+.spread-fabric-title-strip{
+  top:80%;
+  transform:rotate(-7deg);
+}
+.spread-fabric-artist-strip{
+  top:89%;
+  left:19%;
+  font-size:clamp(.62rem,1.2vw,1.1rem);
+  transform:rotate(5deg);
+}
+
+@media (max-width:768px){
+  .fabric-cover-logo-strip,
+  .spread-fabric-logo-strip{top:8%;height:10%}
+  .fabric-cover-logo-strip svg,
+  .spread-fabric-logo-strip svg{width:58%}
+  .fabric-cover-artwork,
+  .spread-fabric-artwork{top:24%;left:20%;width:60%}
+  .fabric-cover-title-strip,
+  .spread-fabric-title-strip{top:80%;font-size:clamp(.72rem,3.7vw,1.2rem)}
+  .fabric-cover-artist-strip,
+  .spread-fabric-artist-strip{top:89%;font-size:clamp(.64rem,3.1vw,1rem)}
 }

@@ -3,7 +3,7 @@ import { Song } from '../types';
 import { PataphorLogo } from './Logo';
 import { BookOpen, RefreshCw } from 'lucide-react';
 import { AudioPlayer } from './AudioPlayer';
-import compositionCover from '../../imgs/composition-cover.svg';
+import orangeFabricCover from '../../imgs/orange-fabric-cover.svg';
 import linedPaper from '../../imgs/lined-paper.svg';
 
 interface Page3CoverProps {
@@ -51,31 +51,24 @@ export const Page3Cover: React.FC<Page3CoverProps> = ({
           {/* Composition Book Cover */}
           <div className="composition-book-cover">
             <img
-              src={compositionCover}
-              alt="Composition Book Cover"
+              src={orangeFabricCover}
+              alt="Orange fabric notebook cover"
               className="cover-bg-image"
             />
 
-            {/* The Label Area containing Album Art, Title, Artist */}
-            <div className="composition-label-overlay">
-              <div className="composition-artwork-box">
+            <div className="fabric-cover-logo-strip">
+              <PataphorLogo transparentBackground title="Pataphor" />
+            </div>
+            <div className="fabric-cover-artwork">
                 <img
                   src={artworkSrc}
                   alt={`${song.trackName} artwork`}
                   crossOrigin="anonymous"
-                  className="composition-album-art"
+                  className="fabric-cover-art"
                 />
-              </div>
-
-              <div className="composition-text-details">
-                <span className="composition-song-title">
-                  {song.trackName}
-                </span>
-                <span className="composition-song-artist">
-                  by {song.artistName.toLowerCase()}
-                </span>
-              </div>
             </div>
+            <div className="fabric-cover-title-strip">{song.trackName}</div>
+            <div className="fabric-cover-artist-strip">by {song.artistName}</div>
           </div>
         </div>
 

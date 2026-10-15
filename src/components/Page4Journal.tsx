@@ -5,7 +5,7 @@ import { renderJournalToPng, downloadDataUrl } from '../services/exportJournal';
 import { Download, Loader2, Check, Type, Eye, X, Pen, Eraser } from 'lucide-react';
 import { AudioPlayer } from './AudioPlayer';
 import { motion } from 'motion/react';
-import compositionCover from '../../imgs/composition-cover.svg';
+import orangeFabricCover from '../../imgs/orange-fabric-cover.svg';
 
 interface Page4JournalProps {
   song: Song;
@@ -206,30 +206,24 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
             {/* LEFT HALF: Composition Book Cover (matching Mockup 4 left side) */}
             <div className="spread-page spread-page-left">
               <img
-                src={compositionCover}
-                alt="Composition Book Cover"
+                src={orangeFabricCover}
+                alt="Orange fabric notebook cover"
                 className="spread-cover-image"
               />
 
-              <div className="spread-cover-overlay">
-                <div className="spread-artwork-box">
+              <div className="spread-fabric-logo-strip">
+                <PataphorLogo transparentBackground title="Pataphor" />
+              </div>
+              <div className="spread-fabric-artwork">
                   <img
                     src={artworkSrc}
                     alt={`${song.trackName} album art`}
                     crossOrigin="anonymous"
-                    className="spread-album-art"
+                    className="spread-fabric-art"
                   />
-                </div>
-
-                <div className="spread-cover-meta">
-                  <span className="spread-song-title">
-                    {song.trackName}
-                  </span>
-                  <span className="spread-song-artist">
-                    by {song.artistName.toLowerCase()}
-                  </span>
-                </div>
               </div>
+              <div className="spread-fabric-title-strip">{song.trackName}</div>
+              <div className="spread-fabric-artist-strip">by {song.artistName}</div>
             </div>
 
             {/* RIGHT HALF: Lined Pad Paper (matching Mockup 4 right side) */}

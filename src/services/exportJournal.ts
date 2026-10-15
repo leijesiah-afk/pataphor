@@ -59,13 +59,109 @@ const exportLayoutStyles = `
     text-align: center !important;
   }
   #journal-export-target.journal-export-mode .spread-cover-overlay {
-    left: 21% !important;
+    left: 7% !important;
+    width: 86% !important;
+    height: 32% !important;
+    top: 20% !important;
+    display: grid !important;
+    grid-template-columns: 22% minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 6% !important;
+    padding: 4% 5% !important;
+    background: #faf8f5 !important;
+    border: 1px solid rgba(25, 18, 12, .86) !important;
+    box-shadow: 6px 6px 0 rgba(25, 18, 12, .16) !important;
+    overflow: visible !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-logo-strip {
+    top: 8% !important;
+    height: 10% !important;
+    border: 1px solid rgba(36, 27, 27, .72) !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-logo-strip svg {
     width: 58% !important;
-    height: 30% !important;
+    height: auto !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-artwork {
     top: 24% !important;
+    left: 20% !important;
+    width: 60% !important;
+    transform: rotate(-3deg) !important;
+    box-shadow: 10px 12px 0 rgba(53, 30, 40, .24) !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-title-strip,
+  #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
+    display: table !important;
+    box-sizing: border-box !important;
+    z-index: 5 !important;
+    width: auto !important;
+    max-width: 82% !important;
+    height: auto !important;
+    padding: 8px 16px !important;
+    color: #241b1b !important;
+    background: #faf8f5 !important;
+    border: 1px solid rgba(36, 27, 27, .72) !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-weight: 400 !important;
+    line-height: 1.08 !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    white-space: nowrap !important;
+    transform-origin: left center !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-title-strip {
+    top: 74% !important;
+    left: 8% !important;
+    transform: rotate(-7deg) !important;
+    font-size: 26px !important;
+    min-height: 48px !important;
+  }
+  #journal-export-target.journal-export-mode .spread-fabric-artist-strip {
+    top: 84% !important;
+    left: 18% !important;
+    transform: rotate(5deg) !important;
+    font-size: 20px !important;
+    min-height: 40px !important;
   }
   #journal-export-target.journal-export-mode .spread-artwork-box {
-    width: 18% !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+  #journal-export-target.journal-export-mode .spread-cover-meta {
+    min-width: 0 !important;
+    gap: 7px !important;
+    overflow: visible !important;
+  }
+  #journal-export-target.journal-export-mode .spread-song-title {
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: 34px !important;
+    font-weight: 600 !important;
+    line-height: 1.04 !important;
+    letter-spacing: -.02em !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+  #journal-export-target.journal-export-mode .spread-song-artist {
+    font-family: "Times New Roman", Times, serif !important;
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+  #journal-export-target.journal-export-mode .spread-cover-overlay:before {
+    content: "COMPOSITION BOOK / FIELD NOTE 001" !important;
+    position: absolute !important;
+    top: 9% !important;
+    right: 5% !important;
+    color: rgba(137, 49, 1, .62) !important;
+    font-family: "Times New Roman", Times, serif !important;
+    font-size: 10px !important;
+    letter-spacing: 2px !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
   }
   #journal-export-target.journal-export-mode .paper-content-area {
     top: 12.76% !important;
@@ -195,7 +291,7 @@ export async function renderJournalToPng(
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '') || 'song';
-  const filename = `pataphor-journal-${cleanTitle}.png`;
+  const filename = `pataphor-field-note-${cleanTitle}.png`;
   const exportTarget = await createExportTarget(element);
 
   try {
