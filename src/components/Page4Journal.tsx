@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Song } from '../types';
 import { PataphorLogo } from './Logo';
 import { renderJournalToPng, downloadDataUrl } from '../services/exportJournal';
-import { Download, Loader2, Check, Volume2, Type, Eye, X, Pen, Eraser } from 'lucide-react';
+import { Download, Loader2, Check, Type, Eye, X, Pen, Eraser } from 'lucide-react';
 import { AudioPlayer } from './AudioPlayer';
 import { motion } from 'motion/react';
 import compositionCover from '../../imgs/composition-cover.svg';
@@ -178,6 +178,21 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
           title="Pataphor"
         />
       </header>
+
+      {song.previewUrl && (
+        <section className="journal-listen-deck" aria-label="Listen while writing">
+          <div className="journal-listen-heading">
+            <span className="journal-listen-kicker">side a / writing soundtrack</span>
+            <span className="journal-listen-title">Listen While Writing</span>
+          </div>
+          <AudioPlayer
+            previewUrl={song.previewUrl}
+            trackName={song.trackName}
+            artistName={song.artistName}
+          />
+          <span className="journal-listen-note">tap the record to play · loops while you write</span>
+        </section>
+      )}
 
       {/* Main Workspace */}
       <main className="journal-main-layout">
@@ -443,20 +458,6 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
               </div>
             </div>
 
-            {/* Mini Player */}
-            {song.previewUrl && (
-              <div className="options-section mini-player-section">
-                <span className="options-title">
-                  <Volume2 size={13} style={{ verticalAlign: '-2px', marginRight: '4px' }} />
-                  Listen While Writing
-                </span>
-                <AudioPlayer
-                  previewUrl={song.previewUrl}
-                  trackName={song.trackName}
-                  artistName={song.artistName}
-                />
-              </div>
-            )}
           </div>
         </aside>
       </main>

@@ -49,8 +49,12 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       };
 
       audio.onended = () => {
-        setIsPlaying(false);
+        audio.currentTime = 0;
         setProgress(0);
+        audio.play().catch(() => {
+          setError('Preview unavailable');
+          setIsPlaying(false);
+        });
       };
 
       audio.onerror = () => {
