@@ -87,6 +87,19 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
     }
   };
 
+  const getLineHeight = () => {
+    switch (fontChoice) {
+      case 'homemade-apple':
+        return 2.1;
+      case 'playpen':
+        return 1.75;
+      case 'caveat':
+        return 1.4;
+      default:
+        return 1.5;
+    }
+  };
+
   return (
     <div className="journal-page-container">
       {/* Top Header Logo */}
@@ -175,6 +188,7 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
                     className="paper-handwriting-input"
                     style={{
                       fontFamily: getFontFamily(),
+                      lineHeight: getLineHeight(),
                       display: 'block'
                     }}
                     value={journalEntry}
@@ -185,7 +199,8 @@ export const Page4Journal: React.FC<Page4JournalProps> = ({
                   <div
                     className="paper-handwriting-export-layer"
                     style={{
-                      fontFamily: getFontFamily()
+                      fontFamily: getFontFamily(),
+                      lineHeight: getLineHeight()
                     }}
                     aria-hidden="true"
                   >

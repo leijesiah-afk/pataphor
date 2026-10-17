@@ -54,7 +54,6 @@ const exportLayoutStyles = `
   #journal-export-target.journal-export-mode .paper-handwriting-input,
   #journal-export-target.journal-export-mode .paper-handwriting-export-layer {
     font-size: 3.6cqh !important;
-    line-height: 3.23cqh !important;
     padding-top: .35cqh !important;
     text-align: center !important;
   }
@@ -205,6 +204,65 @@ async function rasterizeCoverImage(source: HTMLImageElement): Promise<string | n
   }
 }
 
+const SVG_RASTER_SCALE = 3;
+
+/**
+ * Rasterizes an inline <svg> to a fixed-size PNG data URL. Both html2canvas and
+ * html-to-image mis-handle inline SVGs whose size comes only from CSS, which
+ * clips logos in the exported image; a plain <img> with explicit pixels is
+ * deterministic in every rasterizer.
+ */
+async function rasterizeInlineSvg(svg: SVGSVGElement, boxWidth: number): Promise<string | null> {
+  try {
+    const rect = svg.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    const width = Math.max(1, Math.round(boxWidth));
+    const height = Math.max(1, Math.round((boxWidth * rect.height) / rect.width));
+
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', String(width * SVG_RASTER_SCALE));
+    clone.setAttribute('height', String(height * SVG_RASTER_SCALE));
+    const serialized = new XMLSerializer().serializeToString(clone);
+    const dataUrl =
+      'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
+
+    const image = new Image();
+    image.src = dataUrl;
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error('Logo svg could not be loaded.'));
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width * SVG_RASTER_SCALE;
+    canvas.height = height * SVG_RASTER_SCALE;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/png');
+  } catch (error) {
+    console.warn('Could not rasterize logo svg for export:', error);
+    return null;
+  }
+}
+
+async function replaceSvgWithRasterizedImage(svg: SVGSVGElement | null): Promise<void> {
+  if (!svg) return;
+  const boxWidth = svg.getBoundingClientRect().width;
+  if (boxWidth <= 0) return;
+  const rasterized = await rasterizeInlineSvg(svg, boxWidth);
+  if (!rasterized) return;
+  const image = document.createElement('img');
+  image.src = rasterized;
+  image.alt = svg.getAttribute('aria-label') || 'Pataphor logo';
+  image.style.width = `${boxWidth}px`;
+  image.style.maxWidth = '100%';
+  image.style.height = 'auto';
+  image.style.opacity = getComputedStyle(svg).opacity;
+  svg.replaceWith(image);
+}
+
 async function createExportTarget(element: HTMLElement): Promise<HTMLElement> {
   const target = element.cloneNode(true) as HTMLElement;
   target.classList.add('journal-export-mode');
@@ -283,6 +341,16 @@ async function createExportTarget(element: HTMLElement): Promise<HTMLElement> {
   style.textContent = exportLayoutStyles;
   target.prepend(style);
   document.body.appendChild(target);
+
+  // Inline SVGs rasterize unreliably in html2canvas/html-to-image (clipped logos
+  // in exported PNGs), so swap every logo svg for a fixed-size png <img>. This
+  // runs after the export layout is attached so the svgs have their final sizes.
+  await replaceSvgWithRasterizedImage(
+    target.querySelector('.paper-watermark-logo svg')
+  );
+  await replaceSvgWithRasterizedImage(
+    target.querySelector('.spread-fabric-logo-strip svg')
+  );
   return target;
 }
 
@@ -346,6 +414,8 @@ export async function renderJournalToPng(
   try {
     const dataUrl = await toPng(exportTarget, {
       pixelRatio: 3,
+      width: EXPORT_WIDTH,
+      height: EXPORT_HEIGHT,
       cacheBust: true,
       skipFonts: false,
       backgroundColor: '#f7f1e8',

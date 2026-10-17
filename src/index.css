@@ -66,7 +66,7 @@
 .paper-content-area{top:12.76%;bottom:0;padding-top:0;padding-left:8%;padding-right:8%}
 .paper-date-row{height:3.23cqh;min-height:3.23cqh;margin-bottom:6.46cqh;align-items:center}
 .paper-date-text{font-size:3.6cqh;line-height:1}
-.paper-handwriting-input,.paper-handwriting-export-layer{font-size:3.6cqh;line-height:3.23cqh;padding-top:.45cqh;text-align:center}
+.paper-handwriting-input,.paper-handwriting-export-layer{font-size:3.6cqh;line-height:1.6;padding-top:.45cqh;text-align:center}
 .paper-handwriting-input::placeholder{font-size:2.8cqh;line-height:3.23cqh;text-align:center;white-space:nowrap}
 
 .export-only-field-note{display:none}
@@ -179,7 +179,7 @@ body{background-color:var(--color-bg-pure);color:var(--color-text-dark)}
 .paper-handwriting-input,.paper-handwriting-export-layer{
   box-sizing:border-box;
   font-size:3.6cqh;
-  line-height:3.23cqh;
+  line-height:1.6;
   padding-top:.35cqh;
   text-align:center;
   white-space:pre-wrap;
